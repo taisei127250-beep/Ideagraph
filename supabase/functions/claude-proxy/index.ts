@@ -40,7 +40,7 @@ Deno.serve(async (req: Request) => {
     }
 
     // Parse request body
-    const { prompt, model = 'claude-sonnet-4-6', max_tokens = 1024 } = await req.json();
+    const { prompt, model = 'claude-sonnet-4-6', max_tokens = 2000 } = await req.json();
 
     if (!prompt) {
       return new Response(

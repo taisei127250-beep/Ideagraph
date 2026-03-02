@@ -139,9 +139,14 @@ export async function saveTagLayers(supabase, userId, tagLayers) {
 
 export async function callClaudeViaProxy(supabase, prompt) {
   const { data, error } = await supabase.functions.invoke('claude-proxy', {
-    body: { prompt, model: 'claude-sonnet-4-20250514', max_tokens: 2000 },
+    body: { prompt, model: 'claude-sonnet-4-6', max_tokens: 2000 },
   });
   if (error) throw new Error('Claude proxy error: ' + error.message);
+  // data is the full Anthropic API response object
+  if (data?.content) {
+    const text = data.content.map(c => c.text || '').join('');
+    return JSON.parse(text.replace(/```json\n?|```\n?/g, '').trim());
+  }
   if (typeof data === 'string') {
     return JSON.parse(data.replace(/```json\n?|```\n?/g, '').trim());
   }
